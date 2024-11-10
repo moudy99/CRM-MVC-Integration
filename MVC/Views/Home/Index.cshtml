@@ -1,0 +1,26 @@
+﻿@model List<DLL.Models.ProductModel>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<main>
+    <h1>Product List</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Current Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.CurrentStock</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</main>
