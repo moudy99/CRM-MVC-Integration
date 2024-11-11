@@ -90,7 +90,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%,-50%);
-        z-index:666666666666;
+        z-index: 666666666666;
     }
 
         .loader::after {
@@ -231,11 +231,11 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     const overlay = document.querySelector(".overlay");
     const loader = document.querySelector(".loader");
-
-
 
     function showLoader() {
         overlay.style.display = "block";
@@ -247,73 +247,102 @@
         loader.style.display = "none";
     }
 
-    function closeModel(){
+    function closeModel() {
         $('#addMovmentModel').modal('hide');
     }
-    function getAvailableProducts(callback) {
-        showLoader();
-        $.ajax({
-            url: '/Product/GetAllProducts',
-            type: 'GET',
-            success: function (data) {
-                hideLoader();
-                const productSelect = $('#MovedProductId');
-                productSelect.empty();
-                productSelect.append('<option value="">Select a product</option>');
-                data.forEach(product => {
-                    productSelect.append(`<option value="${product.ProductId}">${product.Name}</option>`);
-                });
-                if (callback) callback();
-            },
-            error: function () {
-                hideLoader();
-                console.error("Error fetching products.");
-            }
+
+    let AllProducts;
+
+    async function getAvailableProducts() {
+        try {
+            showLoader();
+            const response = await $.ajax({
+                url: '/Product/GetAllProducts',
+                type: 'GET'
+            });
+            hideLoader();
+            AllProducts = response;
+            populateProductSelect(response);
+        } catch (error) {
+            hideLoader();
+            showError("Error fetching products.");
+        }
+    }
+
+    function populateProductSelect(products) {
+        const productSelect = $('#MovedProductId');
+        productSelect.empty();
+        productSelect.append('<option value="">Select a product</option>');
+        products.forEach(product => {
+            productSelect.append(`<option value="${product.ProductId}">${product.Name}</option>`);
         });
     }
 
     function showAddMovementModal() {
-        getAvailableProducts(() => {
+        getAvailableProducts().then(() => {
             $('#addMovmentModel').modal('show');
         });
     }
 
-    function submitMovementForm() {
+    function showError(message) {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: message
+        });
+    }
+
+    async function submitMovementForm() {
         showLoader();
+
         const productId = $('#MovedProductId').val();
         const movedQuantity = $('#movedQuantity').val();
         const movementType = $('input[name="movementType"]:checked').val();
         const movedName = $('#MovedName').val();
 
-        if (productId && movedQuantity && movementType && movedName) {
-            $.ajax({
-                url: '@Url.Action("AddMovement", "Movement")',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    MovedProductId: productId,
-                    MovedQuntity: parseInt(movedQuantity, 10),
-                    MovmentType: parseInt(movementType, 10),
-                    MovedName: movedName
-                }),
-                success: function (response) {
-                    $('#addMovmentModel').modal('hide');
-                    $('#addMovementForm')[0].reset();
-                    hideLoader();
-                    if (response.success) {
-                    
-                        location.reload();
-                    } else {
-                        alert("Failed to add movement: " + response.message);
-                    }
-                },
-                error: function() {
-                    alert("An error occurred while adding the movement.");
+        try {
+            const currentProduct = AllProducts.find(prod => prod.ProductId === productId);
+            const currentStock = currentProduct?.CurrentStock || 0;
+
+            if (currentStock < movedQuantity && Number(movementType) == 2) {
+                hideLoader();
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    html: '<span style="color: #bb2d3b;">Not enough stock available to complete this movement. Please adjust the quantity or check inventory levels.</span>'
+                });
+
+            }
+
+            if (productId && movedQuantity && movementType && movedName) {
+                const response = await $.ajax({
+                    url: '@Url.Action("AddMovement", "Movement")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        MovedProductId: productId,
+                        MovedQuntity: parseInt(movedQuantity, 10),
+                        MovmentType: parseInt(movementType, 10),
+                        MovedName: movedName
+                    })
+                });
+
+                hideLoader();
+                $('#addMovmentModel').modal('hide');
+                $('#addMovementForm')[0].reset();
+
+                if (response.success) {
+                    location.reload();
+                } else {
+                    showError("Failed to add movement: " + response.message);
                 }
-            });
-        } else {
+            } else {
+                hideLoader();
+                showError("Please fill in all fields.");
+            }
+        } catch (error) {
             hideLoader();
-            alert("Please fill in all fields.");
+            showError("An error occurred while adding the movement.");
         }
     }
 </script>
