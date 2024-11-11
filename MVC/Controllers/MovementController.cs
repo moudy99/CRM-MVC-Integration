@@ -38,7 +38,6 @@ namespace MVC.Controllers
                 return Json(new { success = true, message = "Movement added successfully!" });
             }
             return Json(new { success = false, message = "Failed to add Movement." });
-
         
         }
     }
