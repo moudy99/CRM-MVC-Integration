@@ -1,5 +1,7 @@
 ﻿using DAL.Repository.Product;
 using DLL.Models;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,10 +28,27 @@ namespace BLL.Service.Product
                 products.Add(new ProductModel
                 {
                     Name = entity.GetAttributeValue<string>("m99_name"),
-                    CurrentStock = entity.GetAttributeValue<int>("m99_quntity")
+                    CurrentStock = entity.GetAttributeValue<int>("m99_quntity"),
+                    ProductId = entity.GetAttributeValue<Guid>("m99_productid")
                 });
             }
             return products;
+        }
+
+        public bool AddProdcut(ProductModel model)
+        {
+            try
+            {
+                Entity entity = new Entity("m99_product");
+                entity["m99_name"] = model.Name;
+                entity["m99_quntity"] = model.CurrentStock;
+                productRepository.AddProduct(entity);
+            return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

@@ -5,5 +5,6 @@ namespace DAL.Repository.Movements
     public interface IMovementsRepository
     {
         DataCollection<Entity> GetAllMovements();
+        bool AddMovement(Entity movementModel);
     }
 }

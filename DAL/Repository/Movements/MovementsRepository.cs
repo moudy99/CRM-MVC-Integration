@@ -1,5 +1,6 @@
 ﻿using DAL.Helper;
 using Microsoft.Xrm.Sdk;
+using System.Web.Services.Description;
 
 namespace DAL.Repository.Movements
 {
@@ -20,6 +21,24 @@ namespace DAL.Repository.Movements
             var result = _service.FetchMultiple(query);
 
             return result;
+        }
+
+        public bool AddMovement(Entity movementModel)
+        {
+            try
+            {
+                Entity Movement = new Entity("m99_movement");
+                Movement["m99_name"] = movementModel["m99_name"];
+                Movement["m99_movedproduct"] = movementModel["m99_movedproduct"];
+                Movement["m99_movedquntity"] = movementModel["m99_movedquntity"];
+                Movement["m99_movedtype"] = movementModel["m99_movedtype"];
+                _service.Create(Movement);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

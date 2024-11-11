@@ -9,5 +9,7 @@ namespace DAL.Repository.Product
 
         Entity GetProductById(Guid id);
 
+         bool AddProduct(Entity product);
+
     }
 }

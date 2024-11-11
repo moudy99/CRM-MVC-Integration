@@ -10,7 +10,6 @@ namespace BLL.Models
 
         public Guid MovedProductId { get; set; }
 
-        //public Enums.MovementType Type { get; set; }
         public int MovmentType { get; set; }
 
         public ProductModel Product { get; set; }

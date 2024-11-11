@@ -30,6 +30,7 @@ namespace DAL.Repository.Product
                               <entity name='m99_product'>
                                 <attribute name='m99_name'/>
                                 <attribute name='m99_quntity'/>
+<attribute name=""m99_productid"" />
                               </entity>
                             </fetch>
                             ";
@@ -38,6 +39,21 @@ namespace DAL.Repository.Product
             return res;
         }
 
+        public bool AddProduct(Entity product)
+        {
+            try
+            {
+                Entity prd = new Entity("m99_product");
+                prd["m99_name"] = product["m99_name"];
+                prd["m99_quntity"] = product["m99_quntity"];
+                service.Create(prd);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
     }
 }
