@@ -38,6 +38,21 @@ namespace DAL.Repository.Product
             return res;
         }
 
+        public bool AddProduct(Entity product)
+        {
+            try
+            {
+                Entity prd = new Entity("m99_product");
+                prd["m99_name"] = product["m99_name"];
+                prd["m99_quntity"] = product["m99_quntity"];
+                service.Create(prd);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
     }
 }

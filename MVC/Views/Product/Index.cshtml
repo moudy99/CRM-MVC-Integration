@@ -1,7 +1,7 @@
 ﻿@model List<DLL.Models.ProductModel>
 
 @{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Products";
 }
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 
@@ -86,10 +86,33 @@
         const productQuantity = document.getElementById("productQuantity").value;
 
         if (productName && productQuantity) {
-            $('#addProductModal').modal('hide');
-            document.getElementById("addProductForm").reset();
+            $.ajax({
+                url: '@Url.Action("AddProduct", "Product")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    Name: productName,
+                    CurrentStock: parseInt(productQuantity, 10)
+                }),
+                success: function(response) {
+                    if (response.success) {
+                        // Hide modal and reset form upon success
+                        $('#addProductModal').modal('hide');
+                        document.getElementById("addProductForm").reset();
+                        // Reload the page to show updated product list
+                        location.reload();
+                    } else {
+                        alert("Failed to add product: " + response.message);
+                    }
+                },
+                error: function() {
+                    alert("An error occurred while adding the product.");
+                }
+            });
         } else {
             alert("Please fill in all fields.");
         }
     }
 </script>
+
+

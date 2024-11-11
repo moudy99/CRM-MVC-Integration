@@ -11,6 +11,6 @@ namespace BLL.Service.Product
     public interface IProductService
     {
             List<ProductModel> GetProductList();
-
+        bool AddProdcut(ProductModel model);
     }
 }

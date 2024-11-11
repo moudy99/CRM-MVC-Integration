@@ -22,14 +22,13 @@ namespace MVC.Controllers
             return View(products);
 
         }
-
         public ActionResult About()
         {
 
             var result = movementsService.Movements();
 
-            ViewBag.Message = "Your application description page.";
-            return View();
+            ViewBag.Message = $"this is the movement count ==>{result.Count}";
+            return View(result);
         }
 
         public ActionResult Contact()
