@@ -96,6 +96,7 @@
     <Compile Include="Service\Movements\MovementsService.cs" />
     <Compile Include="Service\Product\IProductService.cs" />
     <Compile Include="Service\Product\ProductService.cs" />
+    <Compile Include="ViewModel\AddMovemetnVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj">

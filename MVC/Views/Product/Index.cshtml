@@ -96,10 +96,8 @@
                 }),
                 success: function(response) {
                     if (response.success) {
-                        // Hide modal and reset form upon success
                         $('#addProductModal').modal('hide');
                         document.getElementById("addProductForm").reset();
-                        // Reload the page to show updated product list
                         location.reload();
                     } else {
                         alert("Failed to add product: " + response.message);

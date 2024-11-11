@@ -30,6 +30,7 @@ namespace DAL.Repository.Product
                               <entity name='m99_product'>
                                 <attribute name='m99_name'/>
                                 <attribute name='m99_quntity'/>
+<attribute name=""m99_productid"" />
                               </entity>
                             </fetch>
                             ";

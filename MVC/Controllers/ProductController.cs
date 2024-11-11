@@ -36,5 +36,12 @@ namespace MVC.Controllers
             }
             return Json(new { success = false, message = "Failed to add product." });
         }
+        [HttpGet]
+        public ActionResult GetAllProducts()
+        {
+            var result = productService.GetProductList();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

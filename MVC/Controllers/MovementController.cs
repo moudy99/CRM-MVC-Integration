@@ -1,5 +1,7 @@
 ﻿using BLL.Service.Movements;
 using BLL.Service.Product;
+using BLL.ViewModel;
+using DLL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,19 @@ namespace MVC.Controllers
             var result = movementsService.Movements();
 
             return View(result);
+        }
+
+        [HttpPost]
+        public ActionResult AddMovement(AddMovemetnVM movemetnVM)
+        {
+            if (ModelState.IsValid)
+            {
+                movementsService.AddPMovement(movemetnVM);
+                return Json(new { success = true, message = "Movement added successfully!" });
+            }
+            return Json(new { success = false, message = "Failed to add Movement." });
+
+        
         }
     }
 }

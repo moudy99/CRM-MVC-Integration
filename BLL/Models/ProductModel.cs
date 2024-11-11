@@ -9,5 +9,7 @@ namespace DLL.Models
     {
         public string Name { get; set; }
         public int CurrentStock { get; set; }
+
+        public Guid ProductId { get; set; }
     }
 }

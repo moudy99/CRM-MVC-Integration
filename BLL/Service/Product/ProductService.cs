@@ -28,7 +28,8 @@ namespace BLL.Service.Product
                 products.Add(new ProductModel
                 {
                     Name = entity.GetAttributeValue<string>("m99_name"),
-                    CurrentStock = entity.GetAttributeValue<int>("m99_quntity")
+                    CurrentStock = entity.GetAttributeValue<int>("m99_quntity"),
+                    ProductId = entity.GetAttributeValue<Guid>("m99_productid")
                 });
             }
             return products;
