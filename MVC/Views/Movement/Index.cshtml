@@ -129,10 +129,10 @@
         z-index: 66666666666;
     }
 
-    .add-movement:hover {
+    .add-movement:hover, .go-to-product:hover {
         background-color: #bb2d3b;
         transition: all .3s ease-in-out;
-        transform: translateX(2px);
+        transform: translateY(-2px);
         box-shadow: -2px 3px #00000061;
         border: none;
     }
@@ -166,9 +166,12 @@
                             <td>@movement.Product.Name</td>
                             <td>@movement.MovedQuntity</td>
                             <td>@movement.MovedName</td>
-                            <td>@(movement.MovmentType == 1 ? "In" : "Out")</td>
+                            <td class="@(movement.MovmentType == 1 ? "text-success fw-bold" : "text-danger fw-bold")">
+                                @(movement.MovmentType == 1 ? "In" : "Out")
+                            </td>
+
                             <td>
-                                <a href="@Url.Action("ProductDetails", "Products", new { id = movement.MovedProductId })" class="btn btn-primary">
+                                <a href="@Url.Action("ProductDetails", "Products", new { id = movement.MovedProductId })" class="btn btn-dark rounded-3 go-to-product">
                                     View Product
                                 </a>
                             </td>
@@ -212,11 +215,11 @@
                     <div class="radio-group">
                         <label>
                             <input type="radio" name="movementType" value="1" required>
-                            <span>In</span>
+                            <span >In</span>
                         </label>
                         <label>
                             <input type="radio" name="movementType" value="2" required>
-                            <span>Out</span>
+                            <span >Out</span>
                         </label>
                     </div>
                 </form>
@@ -312,7 +315,8 @@
                     html: '<span style="color: #bb2d3b;">Not enough stock available to complete this movement. Please adjust the quantity or check inventory levels.</span>'
                 });
 
-            }
+            } else {
+
 
             if (productId && movedQuantity && movementType && movedName) {
                 const response = await $.ajax({
@@ -339,7 +343,9 @@
             } else {
                 hideLoader();
                 showError("Please fill in all fields.");
+                }
             }
+
         } catch (error) {
             hideLoader();
             showError("An error occurred while adding the movement.");
